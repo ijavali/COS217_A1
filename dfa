@@ -1,0 +1,42 @@
+------------------------------------------------------------------------
+Textual representation of the "subset of the de-comment job of the C preprocessor"
+DFA from Assignment 1 of COS 217
+------------------------------------------------------------------------
+
+OUTSIDE (accept) <-- the start state (neither in comment nor string/character literals)
+   /:  OPENING_COMMENT
+   ":  IN_STRING_LITERAL
+   ':  IN_CHAR_LITERAL
+   other: OUTSIDE
+
+OPENING_COMMENT (accept)
+   *: IN_COMMENT
+   /: OPENING_COMMENT
+   ": IN_STRING_LITERAL
+   ': IN_CHAR_LITERAL
+   other: OUTSIDE
+
+IN_COMMENT (reject)
+   *: CLOSING_COMMENT
+   other: IN_COMMENT
+
+CLOSING_COMMENT (reject)
+   /: OUTSIDE
+   *: CLOSING_COMMENT
+   other: IN_COMMENT
+
+IN_STRING_LITERAL (accept)
+   \: ESCAPE_IN_STRING
+   ": OUTSIDE
+   other: IN_STRING_LITERAL
+
+IN_CHAR_LITERAL (accept)
+   \: ESCAPE_IN_CHAR
+   ': OUTSIDE
+   other: IN_CHAR_LITERAL
+
+ESCAPE_IN_STRING (accept)
+   other: IN_STRING_LITERAL
+
+ESCAPE_IN_CHAR (accept)
+   other: IN_CHAR_LITERAL
